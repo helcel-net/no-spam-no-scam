@@ -5,7 +5,7 @@ Weekly releases of list of known scam and spam numbers
 
 
 Currently supported:
-* [Switzerland](./releases/latest/download/ch.txt)  (source [local.ch](local.ch))
+* [Switzerland](./releases/latest/download/ch.txt)  (source [local.ch](https://local.ch))
 * Germany (WIP)
 
 
