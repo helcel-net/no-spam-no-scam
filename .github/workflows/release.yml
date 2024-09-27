@@ -20,14 +20,21 @@ jobs:
       run: bash ch.sh
       id: extract
 
+    - name: Get current year and week number
+      id: date
+      run: |
+        echo "TAG_NAME=release-$(date +'%Y.%V')" >> $GITHUB_ENV
+        echo "RELEASE_NAME=Release $(date +'%Y.%V')" >> $GITHUB_ENV
+
+
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: release-$(date +'%Y-%m-%d')
-        release_name: Release $(date +'%Y-%m-%d')
+        tag_name: ${{ env.TAG_NAME }}
+        release_name: ${{ env.RELEASE_NAME }}
         draft: false
         prerelease: false
 
