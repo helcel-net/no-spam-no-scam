@@ -1,4 +1,4 @@
-name: Weekly Number Extraction
+name: Weekly Release
 
 on:
   schedule:
@@ -26,8 +26,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: weekly-numbers-$(date +'%Y-%m-%d')
-        release_name: Weekly Numbers $(date +'%Y-%m-%d')
+        tag_name: $(date +'%Y-%m-%d')
+        release_name: $(date +'%Y-%m-%d')
         draft: false
         prerelease: false
 
