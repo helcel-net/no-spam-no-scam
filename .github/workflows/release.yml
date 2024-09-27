@@ -1,0 +1,42 @@
+name: Weekly Number Extraction
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Runs every Sunday at midnight UTC
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up jq
+      run: sudo apt-get install jq
+
+    - name: Run extraction script
+      run: ./ch.sh
+      id: extract
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: weekly-numbers-$(date +'%Y-%m-%d')
+        release_name: Weekly Numbers $(date +'%Y-%m-%d')
+        draft: false
+        prerelease: false
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./ch.txt
+        asset_name: ch.txt
+        asset_content_type: text/plain
