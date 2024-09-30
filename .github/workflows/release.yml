@@ -42,7 +42,7 @@ jobs:
         diff_output=$(diff -u -U 0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) || true )
         echo "..."
         echo "Completed diff logs"
-        
+        echo $diff_output
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
           DIFF="${DIFF}Added: $ADDED %0A"
