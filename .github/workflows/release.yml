@@ -56,7 +56,7 @@ jobs:
         DIFF="${DIFF}%0A${diff_output}%0A"
         echo "..."
         echo "Generated body"
-
+        echo $DIFF
         echo "RELEASE_DIFF=${DIFF}" >> $GITHUB_ENV
 
     - name: Create Release
