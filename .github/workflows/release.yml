@@ -1,4 +1,4 @@
-name: Weekly Release
+name: Release
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
@@ -22,6 +22,7 @@ jobs:
 
     - name: Get current year and week number
       id: date
+      continue-on-error: true
       run: |
         YEAR_WEEK=$(date +'%Y.%V')
         YEAR_WEEK_COUNT=$(git tag -l "${YEAR_WEEK}*" | wc -l)
@@ -29,7 +30,10 @@ jobs:
         echo "TAG_NAME=release-${YEAR_WEEK_STR}" >> $GITHUB_ENV
         echo "RELEASE_NAME=Release ${YEAR_WEEK_STR}" >> $GITHUB_ENV
         echo "Prepared ${RELEASE_NAME}"
-        
+    - name: Get new release diff
+      id: diff
+      continue-on-error: true
+      run: |
         wget https://github.com/helcel-net/no-spam-no-scam/releases/latest/download/ch.txt -O old_release.txt
         echo "Fetched old release"
         ADDED=$(comm -13 <(sort old_release.txt) <(sort ch.txt) | wc -l)
@@ -37,7 +41,6 @@ jobs:
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         echo ".."
         diff_output=$(diff -u -U 0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) )
-        diff_output_exit_code=$?
         echo "..."
         echo "Completed diff logs"
         
