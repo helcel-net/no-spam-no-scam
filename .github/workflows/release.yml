@@ -39,21 +39,25 @@ jobs:
         echo "."
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         echo ".."
-        diff_output=$(diff -udU 0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt))|| true 
+        diff_output=$(diff -u -U0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) | grep -vE '^(---|\+\+\+|@@)') || true 
         echo "..."
         echo "Completed diff logs"
         echo $diff_output
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
-          DIFF="${DIFF}Added: $ADDED %0A"
+          DIFF="${DIFF}Added: $ADDED
+          "
         fi
         echo "."
         if [ "$REMOVED" -gt 0 ]; then
-          DIFF="${DIFF}Removed: $REMOVED %0A"
+          DIFF="${DIFF}Removed: $REMOVED
+          "
         fi
         echo ".."
-        DIFF="${DIFF}%0A**Changelog:**%0A"
-        DIFF="${DIFF}%0A${diff_output}%0A"
+        DIFF="${DIFF}
+        **Changelog:**
+        ${diff_output}
+        "
         echo "..."
         echo "Generated body"
         echo $DIFF
