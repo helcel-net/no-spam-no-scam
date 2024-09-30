@@ -17,7 +17,7 @@ total=$(echo "$initial_data" | jq -r '.pageProps.total')
 pages=$(( (total + 99) / 100 ))
 
 # Initialize an empty array to hold all the numbers
-all_numbers=$(echo "$initial_data" | jq -r '.pageProps.telemarketingNumbers[][0]')
+all_numbers=""
 
 # Loop through each page and fetch the numbers
 for (( page=1; page<=pages; page++ ))
