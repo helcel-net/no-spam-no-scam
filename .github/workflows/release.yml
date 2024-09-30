@@ -36,6 +36,7 @@ jobs:
         echo "."
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         echo ".."
+        diff -u -U 0  old_release.txt ch.txt
         diff_output=$(diff -u -U 0  old_release.txt ch.txt)
         echo "..."
         echo "Completed diff logs"
