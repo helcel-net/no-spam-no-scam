@@ -26,7 +26,8 @@ do
     page_data=$(curl -s "${url}?page=${page}")
     # Extract the numbers and add them to the array
     numbers=$(echo "$page_data" | jq -r '.pageProps.telemarketingNumbers[][0]')
-    all_numbers="${all_numbers}\n${numbers}"
+    all_numbers="${all_numbers}
+${numbers}"
 done
 
 # Prepend each number with + and join them with commas
