@@ -39,10 +39,9 @@ jobs:
         echo "."
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         echo ".."
-        diff_output=$(diff -u -U0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) | grep -vE '^(---|\+\+\+|@@)') || true 
+        diff_output=$(diff -u -U0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt)) || true 
         echo "..."
         echo "Completed diff logs"
-        echo $diff_output
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
           echo "Added: $ADDED" > diff.txt
@@ -56,7 +55,7 @@ jobs:
         echo "${diff_output}" > diff.txt
         echo "..."
         echo "Generated body"
-        echo "RELEASE_DIFF=$(cat diff.txt)" >> $GITHUB_ENV
+        echo "RELEASE_DIFF=$(cat diff.txt | grep -vE '^(---|\+\+\+|@@)')" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
