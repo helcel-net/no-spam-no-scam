@@ -32,7 +32,6 @@ jobs:
         echo "Prepared ${RELEASE_NAME}"
     - name: Get new release diff
       id: diff
-      continue-on-error: true
       run: |
         wget https://github.com/helcel-net/no-spam-no-scam/releases/latest/download/ch.txt -O old_release.txt
         echo "Fetched old release"
@@ -40,7 +39,7 @@ jobs:
         echo "."
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         echo ".."
-        diff_output=$(diff -u -U 0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) )
+        diff_output=$(diff -u -U 0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) || true )
         echo "..."
         echo "Completed diff logs"
         
