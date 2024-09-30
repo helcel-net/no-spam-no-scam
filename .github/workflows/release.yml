@@ -2,7 +2,7 @@ name: Weekly Release
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Runs every Sunday at midnight UTC
+    - cron: '0 0 * * *'  # Runs every Sunday at midnight UTC
   workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
@@ -23,9 +23,23 @@ jobs:
     - name: Get current year and week number
       id: date
       run: |
-        echo "TAG_NAME=release-$(date +'%Y.%V')" >> $GITHUB_ENV
-        echo "RELEASE_NAME=Release $(date +'%Y.%V')" >> $GITHUB_ENV
+        YEAR_WEEK=$(date +'%Y.%V')
+        YEAR_WEEK_COUNT=$(git tag -l "${YEAR_WEEK}*" | wc -l)
+        YEAR_WEEK_STR="${YEAR_WEEK}.${GIT_TAG_COUNT}"
+        echo "TAG_NAME=release-${YEAR_WEEK_STR}" >> $GITHUB_ENV
+        echo "RELEASE_NAME=Release ${YEAR_WEEK_STR}" >> $GITHUB_ENV
 
+        wget https://github.com/helcel-net/no-spam-no-scam/blob/main/releases/latest/download/ch.txt -O old_release.txt
+        ADDED=$(comm -13 <(sort old_release.txt) <(sort ch.txt) | wc -l)
+        REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
+        DIFF=""
+        if [ "$ADDED" -gt 0 ]; then
+          DIFF="${DIFF}Added: $ADDED\n"
+        fi
+        if [ "$REMOVED" -gt 0 ]; then
+          DIFF="${DIFF}Removed: $REMOVED\n"
+        fi
+        echo "RELEASE_DIFF=${DIFF}" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
@@ -35,6 +49,7 @@ jobs:
       with:
         tag_name: ${{ env.TAG_NAME }}
         release_name: ${{ env.RELEASE_NAME }}
+        body: ${{ env.RELEASE_DIFF }}
         draft: false
         prerelease: false
 
