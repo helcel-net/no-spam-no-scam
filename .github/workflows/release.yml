@@ -25,6 +25,7 @@ jobs:
       continue-on-error: true
       run: |
         YEAR_WEEK=$(date +'%Y.%V')
+        git fetch --tags
         a=$(git tag)
         b=$(git tag -l "release-${YEAR_WEEK}")
         YEAR_WEEK_COUNT=$(git tag | grep "^release-${YEAR_WEEK}" | wc -l)
