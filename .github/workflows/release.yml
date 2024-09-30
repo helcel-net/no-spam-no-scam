@@ -28,20 +28,31 @@ jobs:
         YEAR_WEEK_STR="${YEAR_WEEK}.${YEAR_WEEK_COUNT}"
         echo "TAG_NAME=release-${YEAR_WEEK_STR}" >> $GITHUB_ENV
         echo "RELEASE_NAME=Release ${YEAR_WEEK_STR}" >> $GITHUB_ENV
-
+        echo "Prepared ${RELEASE_NAME}"
+        
         wget https://github.com/helcel-net/no-spam-no-scam/releases/latest/download/ch.txt -O old_release.txt
+        echo "Fetched old release"
         ADDED=$(comm -13 <(sort old_release.txt) <(sort ch.txt) | wc -l)
+        echo "."
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
+        echo ".."
+        diff_output=$(diff --old-line-format='-- %L' --new-line-format='++ %L' old_release.txt ch.txt)
+        echo "..."
+        echo "Completed diff logs"
+        
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
           DIFF="${DIFF}Added: $ADDED %0A"
         fi
+        echo "."
         if [ "$REMOVED" -gt 0 ]; then
           DIFF="${DIFF}Removed: $REMOVED %0A"
         fi
+        echo ".."
         DIFF="${DIFF}%0A**Changelog:**%0A"
-        diff_output=$(diff --old-line-format='-- %L' --new-line-format='++ %L' old_release.txt ch.txt)
         DIFF="${DIFF}%0A${diff_output}%0A"
+        echo "..."
+        echo "Generated body"
 
         echo "RELEASE_DIFF=${DIFF}" >> $GITHUB_ENV
 
