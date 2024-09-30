@@ -45,18 +45,18 @@ jobs:
         echo $diff_output
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
-          DIFF="${DIFF}Added: $ADDED%0A"
+          echo "Added: $ADDED" > diff.txt
         fi
         echo "."
         if [ "$REMOVED" -gt 0 ]; then
-          DIFF="${DIFF}Removed: $REMOVED%0A"
+          echo "Removed: $REMOVED" > diff.txt
         fi
         echo ".."
-        DIFF="${DIFF}%0A**Changelog:**%0A${diff_output}"
+        echo "**Changelog:**" > diff.txt
+        echo "${diff_output}" > diff.txt
         echo "..."
         echo "Generated body"
-        echo $DIFF
-        echo "RELEASE_DIFF=${DIFF}" >> $GITHUB_ENV
+        echo "RELEASE_DIFF=$(cat diff.txt)" >> $GITHUB_ENV
 
     - name: Create Release
       id: create_release
