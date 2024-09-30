@@ -34,11 +34,15 @@ jobs:
         REMOVED=$(comm -23 <(sort old_release.txt) <(sort ch.txt) | wc -l)
         DIFF=""
         if [ "$ADDED" -gt 0 ]; then
-          DIFF="${DIFF}Added: $ADDED\n"
+          DIFF="${DIFF}Added: $ADDED %0A"
         fi
         if [ "$REMOVED" -gt 0 ]; then
-          DIFF="${DIFF}Removed: $REMOVED\n"
+          DIFF="${DIFF}Removed: $REMOVED %0A"
         fi
+        DIFF="${DIFF}%0A**Changelog:**%0A"
+        diff_output=$(diff --old-line-format='-- %L' --new-line-format='++ %L' old_release.txt ch.txt)
+        DIFF="${DIFF}%0A${diff_output}%0A"
+
         echo "RELEASE_DIFF=${DIFF}" >> $GITHUB_ENV
 
     - name: Create Release
