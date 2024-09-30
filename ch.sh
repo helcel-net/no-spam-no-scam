@@ -31,7 +31,7 @@ ${numbers}"
 done
 
 # Prepend each number with + and join them with commas
-formatted_numbers=$(echo "$all_numbers" | sed 's/^/+/g' | paste -sd ',' -)
+formatted_numbers=$(echo "$all_numbers" | sed '/^$/d' | sed 's/^/+/g' | paste -sd ',' -)
 
 # Output the formatted numbers
 echo "$formatted_numbers" > ch.txt
