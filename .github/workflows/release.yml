@@ -56,10 +56,17 @@ jobs:
           echo 'EOF'
         } >> "$GITHUB_ENV"
         echo "Generated body"
+        
+        if [ "$ADDED" -eq 0 ] || [ "$REMOVED" -eq 0 ]; then
+          echo "skip=true" >> $GITHUB_ENV
+        else
+          echo "skip=false" >> $GITHUB_ENV
+        fi
 
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
+      if: env.skip == 'false'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -71,6 +78,7 @@ jobs:
 
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
+      if: env.skip == 'false'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
