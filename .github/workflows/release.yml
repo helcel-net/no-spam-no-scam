@@ -26,7 +26,7 @@ jobs:
       run: |
         YEAR_WEEK=$(date +'%Y.%V')
         git fetch --tags
-        YEAR_WEEK_COUNT=$((git tag -l "release-${YEAR_WEEK}*" | wc -l)
+        YEAR_WEEK_COUNT=$(git tag -l "release-${YEAR_WEEK}*" | wc -l)
         YEAR_WEEK_STR="${YEAR_WEEK}.${YEAR_WEEK_COUNT}"
         echo "TAG_NAME=release-${YEAR_WEEK_STR}" >> $GITHUB_ENV
         echo "RELEASE_NAME=Release ${YEAR_WEEK_STR}" >> $GITHUB_ENV
