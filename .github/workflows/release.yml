@@ -36,9 +36,9 @@ jobs:
       run: |
         wget https://github.com/helcel-net/no-spam-no-scam/releases/latest/download/ch.txt -O old_release.txt
         echo "Fetched old release"
-        ADDED=$(comm -13 <(tr ',' '\n' < old_release.txt | sort) <(tr ',' '\n' < ch.txt | sort) | wc -l)
+        ADDED=$(comm -13 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) | wc -l)
         echo "."
-        REMOVED=$(comm -23 <(tr ',' '\n' < old_release.txt | sort) <(tr ',' '\n' < ch.txt | sort) | wc -l)
+        REMOVED=$(comm -23 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) | wc -l)
         echo ".."
         diff_output=$(diff -dU0 <(tr ',' '\n' < old_release.txt) <(tr ',' '\n' < ch.txt) | grep -vE '^(---|\+\+\+|@@|\+\+\n)' | sed -e 's/++/\\+ +/g' -e 's/-+/\\- +/g') || true 
         echo "..."
