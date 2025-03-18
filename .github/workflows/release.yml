@@ -56,6 +56,9 @@ jobs:
           echo 'EOF'
         } >> "$GITHUB_ENV"
         echo "Generated body"
+        echo $ADDED
+        echo $REMOVED
+        echo $diff_output
         
         if [ "$ADDED" -eq 0 ] && [ "$REMOVED" -eq 0 ]; then
           echo "skip=true" >> $GITHUB_ENV
