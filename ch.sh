@@ -5,6 +5,7 @@ local_ch_url="https://www.local.ch/en"
 
 # Fetch the local.ch page and extract the buildId
 build_id=$(curl -s "$local_ch_url" | grep -oP '"buildId":"\K[^"]+')
+echo "Build ID: $build_id"
 
 # Base URL for the JSON file
 url="https://www.local.ch/_next/data/$build_id/en/verified-telemarketing-numbers.json"
